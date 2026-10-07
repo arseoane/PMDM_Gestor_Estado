@@ -1,20 +1,12 @@
-fun gestor_estados(a: Boolean, b: Boolean){
-    if (a == true){
-        if (b == true){
-            estadoprint(3)
-            println("Fin")
-        } else if (b == false){
-            estadoprint(4)
-            estadoprint(1)
-        }
-    }
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
-}
-
-fun estadoprint(estado: Int){
-    println("Estado " + estado)
-}
-
+// punto de partida de la app
 fun main() {
-    gestor_estados(true,false)
+    println("--- Encendiendo la máquina ---")
+    StateMachine.setState(CoffeeMachineState.Idle)
+
+    println("\n--- Sirviendo cafe ---")
+    StateMachine.setState(CoffeeMachineState.ServingCoffee)
+
 }
