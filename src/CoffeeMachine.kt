@@ -14,7 +14,7 @@ object CoffeeMachine {
         currentState = stateMachine.currentState
     }
 
-    fun selectCoffee(type: String = "Nescafé") {
+    fun selectCoffee(type: CoffeeType) {
         stateMachine.selectCoffee(type)
         currentState = stateMachine.currentState
     }
@@ -24,7 +24,27 @@ object CoffeeMachine {
         currentState = stateMachine.currentState
     }
 
-    fun makeCoffee() {
+    fun completeCoinReturn() {
+        stateMachine.completeCoinReturn()
+        currentState = stateMachine.currentState
+    }
+
+    fun serveCoffee() {
+        stateMachine.serveCoffee()
+        currentState = stateMachine.currentState
+    }
+
+    fun finishService() {
+        stateMachine.finishService()
+        currentState = stateMachine.currentState
+    }
+
+    fun completeThanks() {
+        stateMachine.completeThanks()
+        currentState = stateMachine.currentState
+    }
+
+    fun makeCoffee(type: CoffeeType) {
         println("Estado actual: $currentState")
 
         when (currentState) {
@@ -32,11 +52,11 @@ object CoffeeMachine {
                 val idleState = currentState as CoffeeMachineState.Idle
                 println("Máquina encendida desde: ${idleState.timestamp}. Empezando a hacer café...")
                 insertCoins(1)
-                selectCoffee("Nescafé")
+                selectCoffee(type)
                 Thread.sleep(2000)
-                stateMachine.serveCoffee("Nescafé")
-                stateMachine.finishService()
-                currentState = stateMachine.currentState
+                serveCoffee()
+                finishService()
+                completeThanks()
                 println("¡Café listo! Estado: $currentState")
             }
             is CoffeeMachineState.SelectingCoffee -> {
@@ -68,6 +88,27 @@ object CoffeeMachine {
     }
 }
 
+private fun readCoffeeType(): CoffeeType? {
+    println("Elige un café:")
+    println("1. Capuccino")
+    println("2. Americano")
+    println("3. Con chocolate")
+
+    while (true) {
+        when (readLine()?.trim()) {
+            "1" -> return CoffeeType.CAPUCCINO
+            "2" -> return CoffeeType.AMERICANO
+            "3" -> return CoffeeType.CHOCOLATE
+            null -> {
+                println("No se recibió ninguna opción.")
+                return null
+            }
+            else -> println("Opción no válida. Elige 1, 2 o 3:")
+        }
+    }
+}
+
 fun main() {
-    CoffeeMachine.makeCoffee()
+    val coffeeType = readCoffeeType() ?: return
+    CoffeeMachine.makeCoffee(coffeeType)
 }

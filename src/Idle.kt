@@ -26,21 +26,31 @@ class StateMachine {
         }
     }
 
-    fun selectCoffee(type: String = "Nescafé") {
+    fun completeCoinReturn() {
+        when (currentState) {
+            is CoffeeMachineState.ReturningCoins -> {
+                currentState = CoffeeMachineState.Idle
+                println("[StateMachine] Monedas devueltas. Estado actual: $currentState")
+            }
+            else -> println("[StateMachine] No hay monedas pendientes de devolución.")
+        }
+    }
+
+    fun selectCoffee(type: CoffeeType) {
         when (currentState) {
             is CoffeeMachineState.SelectingCoffee -> {
-                currentState = CoffeeMachineState.MakingCoffee
-                println("[StateMachine] Seleccionando café: $type.")
+                currentState = CoffeeMachineState.MakingCoffee(type)
+                println("[StateMachine] Seleccionando café: ${type.displayName}.")
             }
             else -> println("[StateMachine] Debes estar en selección para pedir un café.")
         }
     }
 
-    fun serveCoffee(type: String = "Nescafé") {
-        when (currentState) {
+    fun serveCoffee() {
+        when (val state = currentState) {
             is CoffeeMachineState.MakingCoffee -> {
-                currentState = CoffeeMachineState.ServingCoffee(type)
-                println("[StateMachine] Café servido: $type")
+                currentState = CoffeeMachineState.ServingCoffee(state.type)
+                println("[StateMachine] Café servido: ${state.type.displayName}")
             }
             else -> println("[StateMachine] El café no puede servirse en este estado: $currentState")
         }
@@ -53,6 +63,16 @@ class StateMachine {
                 println("[StateMachine] Gracias por usar la máquina.")
             }
             else -> println("[StateMachine] No hay un café servido para cerrar.")
+        }
+    }
+
+    fun completeThanks() {
+        when (currentState) {
+            is CoffeeMachineState.SayingThanks -> {
+                currentState = CoffeeMachineState.Idle
+                println("[StateMachine] Agradecimiento completado. Estado actual: $currentState")
+            }
+            else -> println("[StateMachine] No hay un agradecimiento pendiente.")
         }
     }
 

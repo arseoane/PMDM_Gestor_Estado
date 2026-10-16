@@ -1,50 +1,41 @@
-## Diagrama:
+## Diagrama de estados
 
 ```mermaid
 stateDiagram-v2
-    [*] --> E1
+    [*] --> Idle
 
-    E1 --> E2 : [monedero > 0] / trE1-2
-    E2 --> E3 : [boton == 0] / trE2-3
-    E2 --> E4 : [boton == 1] / trE2-4
-    E3 --> E1 : [monedasDevueltas == true] / trE3-1
-    E4 --> E5 : [cafeServido == true] / trE4-5
-    E5 --> E1 : [graciasDadas == true] / trE5-1
-
+    Idle --> SelectingCoffee : monedas insertadas
+    SelectingCoffee --> ReturningCoins : pedido cancelado
+    ReturningCoins --> Idle : monedas devueltas
+    SelectingCoffee --> MakingCoffee : café seleccionado
+    MakingCoffee --> ServingCoffee : café preparado
+    ServingCoffee --> SayingThanks : café servido
+    SayingThanks --> Idle : agradecimiento completado
 ```
 
-### Estados
+## Estados
 
-- **E1 (Idle):** Estado inicial de reposo.
-- **E2 (Seleccionar café):** Menú de selección de café o cancelación.
-- **E3 (Devolver monedas):** Proceso de devolución de dinero.
-- **E4 (Servir café):** Proceso de dispensación o preparación del café.
-- **E5 (Decir gracias):** Estado para mostrar el mensaje de agradecimiento.
+- **Idle:** La máquina está en reposo.
+- **SelectingCoffee:** Hay monedas insertadas y se puede seleccionar un café o cancelar el pedido.
+- **ReturningCoins:** La máquina devuelve las monedas de un pedido cancelado.
+- **MakingCoffee:** La máquina prepara el tipo de café seleccionado.
+- **ServingCoffee:** El café está listo para recoger.
+- **SayingThanks:** La máquina agradece al usuario antes de volver al reposo.
+- **Error:** Estado para indicar una operación no válida, como introducir una cantidad de monedas no positiva.
 
----
+## Cafés disponibles
 
-### Transiciones
+Al ejecutar el programa, elige una opción:
 
-- **trE1-2 (De E1 a E2):**
-  - Condición: `monedero > 0`
-  - Acción / Evento: Introducir monedas
+1. Capuccino
+2. Americano
+3. Con chocolate
 
-- **trE2-3 (De E2 a E3):**
-  - Condición: `boton == 0`
-  - Acción / Evento: Botón de cancelar
+La selección se mantiene durante la preparación y se muestra al servir el café. Si se introduce una opción distinta de `1`, `2` o `3`, el programa vuelve a solicitarla.
 
-- **trE2-4 (De E2 a E4):**
-  - Condición: `boton == 1`
-  - Acción / Evento: Botón de café
+## Transiciones principales
 
-- **trE3-1 (De E3 a E1):**
-  - Condición: `monedasDevueltas == true`
-  - Acción / Evento: Se devolvieron las monedas
-
-- **trE4-5 (De E4 a E5):**
-  - Condición: `cafeServido == true`
-  - Acción / Evento: Café servido
-
-- **trE5-1 (De E5 a E1):**
-  - Condición: `graciasDadas == true`
-  - Acción / Evento: Se mostró el mensaje de gracias
+- **Idle → SelectingCoffee:** se insertan monedas válidas.
+- **SelectingCoffee → ReturningCoins → Idle:** se cancela el pedido y se completa la devolución de monedas.
+- **SelectingCoffee → MakingCoffee → ServingCoffee:** se elige uno de los tres cafés y se prepara.
+- **ServingCoffee → SayingThanks → Idle:** se sirve el café, se muestra el agradecimiento y la máquina queda lista para otro pedido.
